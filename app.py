@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from main import create_app, db
 from config import ConfigNames
 
+from main.models import User
 
 app = create_app(ConfigNames.from_str(os.getenv('CONFIG_TYPE', 'DEVELOPMENT')))
 
