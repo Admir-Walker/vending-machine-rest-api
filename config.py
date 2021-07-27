@@ -1,24 +1,44 @@
+import os
 from enum import Enum
+from distutils.util import strtobool
 
+# db settings
+DB_ECHO = strtobool(os.environ.get('DB_ECHO', 'False'))
+DB_TRACK_MODIFICATIONS = strtobool(
+    os.environ.get('DB_TRACK_MODIFICATIONS', 'False'))
+DB_USER = os.environ.get('DB_USER', 'postgres')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'root')
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_PORT = int(os.environ.get('DB_PORT', 5432))
+DB_NAME = os.environ.get('DB_NAME', 'vending-machine')
+DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DB_TEST_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}_test"
+
+# app keys settings
+
+APP_CSRF_SESSION_KEY = os.environ.get('APP_CSRF_SESSION_KEY', 'secret')
+APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY', 'secret')
+APP_JWT_SECRET_KEY = os.environ.get('APP_JWT_SECRET_KEY', 'secret')
 
 class Config():
     TESTING = True
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = ''
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_ECHO = DB_ECHO
+    SQLALCHEMY_DATABASE_URI = DB_URL
+    SQLALCHEMY_TRACK_MODIFICATIONS = DB_TRACK_MODIFICATIONS
 
     # Enable protection agains *Cross-site Request Forgery (CSRF)*
     CSRF_ENABLED = True
 
     # Use a secure, unique and absolutely secret key for
     # signing the data.
-    CSRF_SESSION_KEY = "secret"
+    CSRF_SESSION_KEY = APP_CSRF_SESSION_KEY
 
     # Secret key for signing cookies
-    SECRET_KEY = "secret"
+    SECRET_KEY = APP_SECRET_KEY
 
-    JWT_SECRET_KEY = 'super-secret'
+    JWT_SECRET_KEY = APP_JWT_SECRET_KEY
 
 
 class ProductionConfig(Config):
@@ -26,11 +46,12 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = ''
+    TESTING = False
+    SQLALCHEMY_DATABASE_URI = DB_URL
 
 
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = ''
+    SQLALCHEMY_DATABASE_URI = DB_TEST_URL
 
 
 class ConfigNames(Enum):
