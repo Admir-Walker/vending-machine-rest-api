@@ -1,6 +1,8 @@
 import os
 from enum import Enum
 from distutils.util import strtobool
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
 
 # db settings
 DB_ECHO = strtobool(os.environ.get('DB_ECHO', 'False'))
@@ -10,7 +12,7 @@ DB_USER = os.environ.get('DB_USER', 'postgres')
 DB_PASSWORD = os.environ.get('DB_PASSWORD', 'root')
 DB_HOST = os.environ.get('DB_HOST', 'localhost')
 DB_PORT = int(os.environ.get('DB_PORT', 5432))
-DB_NAME = os.environ.get('DB_NAME', 'vending-machine')
+DB_NAME = os.environ.get('DB_NAME', 'vending_machine')
 DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 DB_TEST_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}_test"
 
@@ -20,6 +22,15 @@ APP_CSRF_SESSION_KEY = os.environ.get('APP_CSRF_SESSION_KEY', 'secret')
 APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY', 'secret')
 APP_JWT_SECRET_KEY = os.environ.get('APP_JWT_SECRET_KEY', 'secret')
 
+spec = APISpec(
+        title='Vending Machine Rest Api',
+        version='1.0.0',
+        openapi_version='3.0.3',
+        plugins=[MarshmallowPlugin()]
+    )
+
+jwt_scheme = {"type": "http", "in":"header", "scheme": "bearer", "bearerFormat": "JWT"}
+spec.components.security_scheme("auth_token", jwt_scheme)
 class Config():
     TESTING = True
     DEBUG = True
@@ -40,6 +51,9 @@ class Config():
 
     JWT_SECRET_KEY = APP_JWT_SECRET_KEY
 
+    # Api config
+    APISPEC_SPEC = spec
+    APISPEC_SWAGGER_URL = '/swagger/'
 
 class ProductionConfig(Config):
     pass

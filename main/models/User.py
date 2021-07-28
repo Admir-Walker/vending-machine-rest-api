@@ -17,10 +17,10 @@ class User(CrudMixin, db.Model):
 
     @property
     def password(self):
-        pass
+        return self.password_hash
 
     @password.setter
-    def set_password(self, password: str):
+    def password(self, password: str):
         self.password_hash = bcrypt.generate_password_hash(
             password).decode('utf-8')
 

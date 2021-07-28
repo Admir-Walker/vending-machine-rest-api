@@ -20,6 +20,9 @@ class CrudMixin():
             return cls.query.get(int(id))
         return None
 
+    @classmethod
+    def get_all(cls):
+        return cls.query.all()
 
     @classmethod
     def create(cls, **kwargs):
