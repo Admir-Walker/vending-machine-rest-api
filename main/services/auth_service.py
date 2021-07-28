@@ -1,6 +1,5 @@
 from main.models.User import User
 from .user_service import UserService
-from .. import jwt
 
 
 class AuthService():
@@ -13,9 +12,6 @@ class AuthService():
             if user is None or not(user.check_password(login_request['password'])):
                 return {"message": "Wrong username or password, try again."}, 403
 
-            return {"message": f"Welcome {user.username}", "auth_token": jwt.encode({
-                "id": user.id,
-                "username": user.username
-            })}
+            return user.encode_token()
         except Exception as e:
             return {"message": "Something went wrong, try again."}

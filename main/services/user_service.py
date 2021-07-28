@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from typing import Union
 from main.models.User import User
-from .. import jwt
 
 
 class UserService():
@@ -17,19 +16,8 @@ class UserService():
             )
 
             user.save()
-
-            return {
-                "message": f"Welcome {user.username}",
-                "auth_token": jwt.encode(
-                    {
-                        "id": user.id,
-                        "username": user.username,
-                        "role": user.role
-                    }
-                )
-            }
-        except Exception as e:
-            print(e)
+            return user.encode_token()
+        except Exception:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -68,6 +56,18 @@ class UserService():
             if user is None:
                 return {"message": "User doesn't exist"}, HTTPStatus.NOT_FOUND
             user.update(**kwargs)
+            return user
+        except:
+            return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    def reset_deposit(user_id):
+        try:
+            user = User.get_by_id(user_id)
+            if user is None:
+                return {"message": "User doesn't exist"}, HTTPStatus.NOT_FOUND
+            user.deposit = 0
+            user.update()
             return user
         except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR

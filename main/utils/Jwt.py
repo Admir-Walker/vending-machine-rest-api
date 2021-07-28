@@ -1,8 +1,10 @@
-from typing import Any, Dict
+from http import HTTPStatus
+from main.models.dtos.auth_schemas import AuthorizationPayload, AuthorizationPayloadSchema
 from functools import wraps
 from flask import request
 from flask.app import Flask
 import jwt
+
 
 class JWT():
     algorithm = 'HS256'
@@ -16,13 +18,20 @@ class JWT():
     def encode(self, payload) -> str:
         return jwt.encode(payload, self.app.config['JWT_SECRET_KEY'], self.algorithm)
 
-    def decode(self, _jwt) -> Dict[str, Any]:
-        return jwt.decode(_jwt, self.app.config['JWT_SECRET_KEY'], algorithms=[self.algorithm])
+    def decode(self, _jwt) -> AuthorizationPayload:
+        return AuthorizationPayloadSchema().load(jwt.decode(_jwt, self.app.config['JWT_SECRET_KEY'], algorithms=[self.algorithm]))
 
     def check_token(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(self.decode(request.headers['Authorization']))
-            print(request.headers, *args, **kwargs)
-            return func(*args, **kwargs)
+            try:
+                payload = self.decode(request.headers['Authorization'])
+                if payload:
+                    kwargs['jwt_payload'] = payload
+                    return func(*args, **kwargs)
+            except Exception:
+                pass
+            return {
+                "message": "Not Authorized"
+            }, HTTPStatus.UNAUTHORIZED
         return wrapper

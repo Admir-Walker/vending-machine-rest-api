@@ -27,7 +27,7 @@ def update(client: FlaskClient, id, user):
 def get_user_id_from_data(data):
     auth_token = data["auth_token"]
     payload = jwt.decode(auth_token)
-    user_id = payload['id']
+    user_id = payload.user_id
     return user_id
 
 
