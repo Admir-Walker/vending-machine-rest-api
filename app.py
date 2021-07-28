@@ -2,7 +2,7 @@ import os
 
 from flask_migrate import Migrate
 from main import create_app, db
-from main.models import User
+from main.models import User, Product
 from config import ConfigNames
 
 
