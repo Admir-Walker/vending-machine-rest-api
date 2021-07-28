@@ -38,7 +38,6 @@ class ProductService():
     @staticmethod
     def update(product_id, kwargs):
         try:
-            print(product_id)
             product = Product.get_by_id(product_id)
             if product is None:
                 return {"message": "Product doesn't exist"}, HTTPStatus.NOT_FOUND

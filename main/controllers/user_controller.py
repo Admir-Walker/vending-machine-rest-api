@@ -1,8 +1,8 @@
 from main.models.User import UserRolesEnum
-from main.utils.decorators import check_role
+from main.utils.decorators import check_role, check_user
 from main.services.user_service import UserService
 from flask_apispec.views import MethodResource
-from main.models.dtos.user_schemas import RegistrationResponseSchema, UserGetResponseSchema, UserSchema, UserUpdateRequestSchema, UserUpdateResponseSchema
+from main.models.dtos.user_schemas import RegistrationResponseSchema, UserDepositRequestSchema, UserGetResponseSchema, UserSchema, UserUpdateRequestSchema, UserUpdateResponseSchema
 from main.models.dtos.helper_schemas import BaseResponseSchema
 from flask_apispec import use_kwargs
 from flask_apispec.annotations import marshal_with
@@ -45,3 +45,13 @@ class UserResetDepositResource(MethodResource, Resource):
     def patch(self, **kwargs):
         payload = jwt.decode(request.headers['Authorization'])
         return UserService.reset_deposit(payload.user_id)
+
+class UserDespositResource(MethodResource, Resource):
+    @jwt.check_token
+    @check_role(UserRolesEnum.BUYER)
+    @use_kwargs(UserDepositRequestSchema)
+    @marshal_with(UserUpdateResponseSchema)
+    def patch(self, **kwargs):
+        payload = jwt.decode(request.headers['Authorization'])
+        deposit = kwargs['deposit']
+        return UserService.deposit(payload.user_id, deposit)

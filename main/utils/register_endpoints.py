@@ -1,7 +1,7 @@
 from main.controllers.product_controller import ProductListResource, ProductResource
 from flask_apispec import FlaskApiSpec
 from flask_restful import Api
-from main.controllers.user_controller import UserListResource, UserResetDepositResource, UserResource
+from main.controllers.user_controller import UserDespositResource, UserListResource, UserResetDepositResource, UserResource
 from main.controllers.auth_controller import LoginAuth
 
 
@@ -11,6 +11,7 @@ def register_api_endpoints(api: Api):
     api.add_resource(UserListResource, '/users')
     api.add_resource(UserResource, '/users/<int:user_id>')
     api.add_resource(UserResetDepositResource, '/reset')
+    api.add_resource(UserDespositResource, '/deposit')
     # product api
     api.add_resource(ProductListResource, '/products')
     api.add_resource(ProductResource, '/products/<int:product_id>')
@@ -22,6 +23,7 @@ def register_docs(docs: FlaskApiSpec):
     docs.register(UserListResource)
     docs.register(UserResource)
     docs.register(UserResetDepositResource)
+    docs.register(UserDespositResource)
     # product docs
     docs.register(ProductListResource)
     docs.register(ProductResource)
