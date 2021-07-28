@@ -27,7 +27,6 @@ class JWT():
             try:
                 payload = self.decode(request.headers['Authorization'])
                 if payload:
-                    kwargs['jwt_payload'] = payload
                     return func(*args, **kwargs)
             except Exception:
                 pass

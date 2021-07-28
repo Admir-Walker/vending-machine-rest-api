@@ -5,15 +5,11 @@ from main.models.User import User
 
 class UserService():
     @staticmethod
-    def register_user(registration_request):
+    def register(registration_request):
         try:
             if UserService().check_if_user_exists(registration_request['username']):
                 return {"message": "Username taken. Try another username."}, HTTPStatus.CONFLICT
-            user = User(
-                username=registration_request['username'],
-                password=registration_request['password'],
-                role=registration_request.get('role')
-            )
+            user = User(**registration_request)
 
             user.save()
             return user.encode_token()
@@ -21,14 +17,14 @@ class UserService():
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    def get_all():
+    def all():
         try:
             return User.get_all()
         except Exception:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    def get_user(user_id):
+    def get(user_id):
         try:
             user = User.get_by_id(user_id)
             if user is None:
@@ -38,7 +34,7 @@ class UserService():
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    def delete_user(user_id):
+    def delete(user_id):
         try:
             user = User.get_by_id(user_id)
             if user is not None:
@@ -50,7 +46,7 @@ class UserService():
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
-    def update_user(user_id, kwargs):
+    def update(user_id, kwargs):
         try:
             user = User.get_by_id(user_id)
             if user is None:
