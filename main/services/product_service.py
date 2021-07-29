@@ -1,15 +1,16 @@
 from http import HTTPStatus
 from main.models.Product import Product
-from flask import request
+from flask import request, make_response, jsonify
 
 from .. import jwt
+
 
 class ProductService():
 
     @staticmethod
     def all():
         try:
-            return Product.get_all()
+            return Product.get_all(), HTTPStatus.OK
         except Exception:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -18,7 +19,7 @@ class ProductService():
         try:
             product = Product.get_by_id(product_id)
             if product is None:
-                return {"message": "Product doesn't exist"}
+                return {"message": "Product doesn't exist"}, HTTPStatus.NOT_FOUND
             return product
         except Exception:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
@@ -50,10 +51,8 @@ class ProductService():
     def create(kwargs):
         try:
             payload = jwt.decode(request.headers['Authorization'])
-            product = Product(**kwargs, seller_id = payload.user_id)
+            product = Product(**kwargs, seller_id=payload.user_id)
             product.save()
-            return product
+            return product, HTTPStatus.CREATED
         except Exception as e:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
-
-        

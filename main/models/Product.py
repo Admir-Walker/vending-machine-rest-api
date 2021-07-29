@@ -1,6 +1,7 @@
 from .. import db
 from main.utils.mixins import CrudMixin
 
+
 class Product(CrudMixin, db.Model):
     amount_available = db.Column(db.Integer, nullable=False)
     cost = db.Column(db.Integer, nullable=False)

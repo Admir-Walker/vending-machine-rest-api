@@ -1,6 +1,7 @@
 from datetime import datetime
 from .. import db
 
+
 class CrudMixin():
     __table_args__ = {'extend_existing': True}
 

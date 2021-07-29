@@ -36,8 +36,10 @@ def check_user(func):
         payload = jwt.decode(request.headers['Authorization'])
         product_id = kwargs['product_id']
         product: Product = Product.get_by_id(product_id)
+
         if product is None:
             return {"message": "Product doesn't exist"}, HTTPStatus.NOT_FOUND
+
         if payload and payload.user_id == product.seller_id:
             return func(*args, **kwargs)
         else:

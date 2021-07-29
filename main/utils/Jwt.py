@@ -1,4 +1,6 @@
 from http import HTTPStatus
+
+from flask_apispec.annotations import doc
 from main.models.dtos.auth_schemas import AuthorizationPayload, AuthorizationPayloadSchema
 from functools import wraps
 from flask import request
@@ -22,6 +24,11 @@ class JWT():
         return AuthorizationPayloadSchema().load(jwt.decode(_jwt, self.app.config['JWT_SECRET_KEY'], algorithms=[self.algorithm]))
 
     def check_token(self, func):
+        @doc(
+            security=[{
+                "Authorization": []
+            }]
+        )
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:

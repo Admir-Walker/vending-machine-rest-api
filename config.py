@@ -23,14 +23,17 @@ APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY', 'secret')
 APP_JWT_SECRET_KEY = os.environ.get('APP_JWT_SECRET_KEY', 'secret')
 
 spec = APISpec(
-        title='Vending Machine Rest Api',
-        version='1.0.0',
-        openapi_version='3.0.3',
-        plugins=[MarshmallowPlugin()]
-    )
+    title='Vending Machine Rest Api',
+    version='1.0.0',
+    openapi_version='2.0.2',
+    plugins=[MarshmallowPlugin()]
+)
 
-jwt_scheme = {"type": "http", "in":"header", "scheme": "bearer", "bearerFormat": "JWT"}
-spec.components.security_scheme("auth_token", jwt_scheme)
+api_key_scheme = {"type": "apiKey", "in": "header", "name": "Authorization"}
+
+spec.components.security_scheme("Authorization", api_key_scheme)
+
+
 class Config():
     TESTING = True
     DEBUG = True
@@ -54,6 +57,7 @@ class Config():
     # Api config
     APISPEC_SPEC = spec
     APISPEC_SWAGGER_URL = '/swagger/'
+
 
 class ProductionConfig(Config):
     pass
