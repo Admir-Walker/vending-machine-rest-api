@@ -25,4 +25,9 @@ test:
 	. venv/bin/activate
 	pytest
 
+coverage:
+	. venv/bin/activate
+	coverage run -m pytest
+	coverage report
+
 all: create db run

@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from flask import json
 from flask.testing import FlaskClient
-from sqlalchemy.orm import joinedload
 from main import jwt
 
 
@@ -22,7 +21,6 @@ def delete(client: FlaskClient, user_id):
 
 def update(client: FlaskClient, id, user):
     return client.put(f'/users/{id}', json=user)
-
 
 def get_user_id_from_data(data):
     auth_token = data["auth_token"]

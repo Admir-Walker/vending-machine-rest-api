@@ -1,10 +1,20 @@
-from main.controllers.user_controller import UserListResource
-from main.controllers.auth_controller import LoginAuth
-from flask_restful import Api
+from tests.data import add_products, add_users
 import pytest
 from main import create_app, db
 from config import ConfigNames
 
+
+@pytest.fixture(autouse=True ,scope='session')
+def setup_db():
+    app = create_app(ConfigNames.TESTING)
+
+    with app.test_client() as client:
+        with app.app_context():
+            db.drop_all()
+            db.create_all()
+            add_users()
+            add_products()
+        yield client
 
 @pytest.fixture
 def client():
@@ -12,5 +22,5 @@ def client():
 
     with app.test_client() as client:
             with app.app_context():
-                db.create_all()
+                pass
             yield client
