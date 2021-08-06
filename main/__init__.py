@@ -1,6 +1,6 @@
 from flask_apispec.extension import FlaskApiSpec
 from flask_restful import Api
-from main.utils.Jwt import JWT
+from main.utils.jwt import JWT
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt

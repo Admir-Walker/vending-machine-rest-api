@@ -105,7 +105,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# Available in public only for demo purposes
+#.env
 .venv
 env/
 venv/

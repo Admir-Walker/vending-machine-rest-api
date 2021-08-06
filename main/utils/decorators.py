@@ -1,11 +1,11 @@
 from http import HTTPStatus
-from main.models.Product import Product
+from main.models.product import Product
 from flask import request
 from functools import wraps
 from .. import jwt
 
 
-def check_role(*allowed_roles):
+def has_valid_role(*allowed_roles):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -24,13 +24,13 @@ def check_role(*allowed_roles):
                         "message": "Not valid role to perform this operation"
                     }, HTTPStatus.FORBIDDEN
 
-            except Exception:
-                pass
+            except:
+                return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
         return wrapper
     return decorator
 
 
-def check_user(func):
+def has_permissions(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         payload = jwt.decode(request.headers['Authorization'])

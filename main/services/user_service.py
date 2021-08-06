@@ -1,7 +1,8 @@
 from http import HTTPStatus
-from main.models.Product import Product
+from main.models.product import Product
 from typing import Union
-from main.models.User import User
+from main.models.user import User
+from psycopg2.errors import IntegrityError, UniqueViolation
 
 
 class UserService():
@@ -16,14 +17,14 @@ class UserService():
 
             user.save()
             return user.encode_token(), HTTPStatus.CREATED
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     def all():
         try:
             return User.get_all()
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -33,7 +34,7 @@ class UserService():
             if user is None:
                 return {"message": "User doesn't exist"}, HTTPStatus.NOT_FOUND
             return user, HTTPStatus.OK
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -51,9 +52,14 @@ class UserService():
     @staticmethod
     def update(user_id, kwargs):
         try:
+            new_username = kwargs.get('username')
             user = User.get_by_id(user_id)
             if user is None:
                 return {"message": "User doesn't exist"}, HTTPStatus.NOT_FOUND
+
+            if user.username != new_username and User.query.filter_by(username=new_username).first() != None:
+                return {"message": "Credentials Taken"}, HTTPStatus.CONFLICT
+
             user.update(**kwargs)
             return user, HTTPStatus.OK
         except:
@@ -85,7 +91,7 @@ class UserService():
                 "message": f"Only {', '.join([str(coin) for coin in UserService.allowed_coins])} coins allowed"
             }, HTTPStatus.CONFLICT
 
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -117,7 +123,7 @@ class UserService():
                 "total_spent": total_product_price,
                 "change": UserService.calculate_change(total_change)
             }, HTTPStatus.OK
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod

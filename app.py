@@ -4,7 +4,8 @@ import os
 from flask_migrate import Migrate
 from werkzeug.utils import redirect
 from main import create_app, db
-from main.models import User, Product
+from main.models.user import User
+from main.models.product import Product
 from config import ConfigNames
 
 

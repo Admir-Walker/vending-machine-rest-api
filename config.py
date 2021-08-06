@@ -3,6 +3,9 @@ from enum import Enum
 from distutils.util import strtobool
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # db settings
 DB_ECHO = strtobool(os.environ.get('DB_ECHO', 'False'))

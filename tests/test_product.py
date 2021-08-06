@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from tests.test_auth import login
+from tests.test_auth import get_token_for_user
 from flask import json
 from flask.testing import FlaskClient
 
@@ -12,6 +12,10 @@ def create(client: FlaskClient, amount_available, cost, product_name, seller_id,
     ), follow_redirects=True, headers={'Authorization': token})
 
 
+def get_all(client: FlaskClient):
+    return client.get('/products')
+
+
 def get(client: FlaskClient, product_id):
     return client.get(f'/products/{product_id}')
 
@@ -22,12 +26,6 @@ def delete(client: FlaskClient, product_id, token):
 
 def update(client: FlaskClient, id, product, token):
     return client.put(f'/products/{id}', json=product, headers={'Authorization': token})
-
-
-def get_token_for_user(client: FlaskClient, role):
-    username = 'user1' if role == 'seller' else 'user2'
-    res = login(client, username, 'test')
-    return json.loads(res.data)['auth_token']
 
 
 def test_create_unauthorized(client: FlaskClient):
@@ -47,13 +45,18 @@ def test_create_success(client: FlaskClient):
     assert res.status_code == HTTPStatus.CREATED
 
 
+def test_get_all(client: FlaskClient):
+    res = get_all(client)
+    assert res.status_code == HTTPStatus.OK
+
+
 def test_get_product_ok(client: FlaskClient):
     res = get(client, 1)
     assert res.status_code == HTTPStatus.OK
 
 
 def test_get_product_not_found(client: FlaskClient):
-    res = get(client, 0)
+    res = get(client, 99999)
     assert res.status_code == HTTPStatus.NOT_FOUND
 
 
@@ -70,7 +73,7 @@ def test_delete_forbidden(client: FlaskClient):
 
 def test_delete_not_found(client: FlaskClient):
     token = get_token_for_user(client, 'seller')
-    res = delete(client, 0, token)
+    res = delete(client, 99999, token)
     assert res.status_code == HTTPStatus.NOT_FOUND
 
 
@@ -82,6 +85,7 @@ def test_delete_ok(client: FlaskClient):
     res = get(client, 3)
     assert res.status_code == HTTPStatus.NOT_FOUND
 
+
 def test_update_unauthorized(client: FlaskClient):
     res = update(client, 1, {
         "amount_available": 50,
@@ -90,6 +94,7 @@ def test_update_unauthorized(client: FlaskClient):
     }, '')
 
     assert res.status_code == HTTPStatus.UNAUTHORIZED
+
 
 def test_update_forbidden(client: FlaskClient):
     token = get_token_for_user(client, 'buyer')
@@ -103,7 +108,7 @@ def test_update_forbidden(client: FlaskClient):
 
 def test_update_not_found(client: FlaskClient):
     token = get_token_for_user(client, 'seller')
-    res = update(client, 0, {
+    res = update(client, 99999, {
         "amount_available": 50,
         "cost": 150,
         "product_name": "new_name"

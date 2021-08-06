@@ -35,7 +35,7 @@ class JWT():
                 payload = self.decode(request.headers['Authorization'])
                 if payload:
                     return func(*args, **kwargs)
-            except Exception:
+            except:
                 pass
             return {
                 "message": "Not Authorized"

@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from main.models.Product import Product
+from main.models.product import Product
 from flask import request, make_response, jsonify
 
 from .. import jwt
@@ -11,7 +11,7 @@ class ProductService():
     def all():
         try:
             return Product.get_all(), HTTPStatus.OK
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -21,7 +21,7 @@ class ProductService():
             if product is None:
                 return {"message": "Product doesn't exist"}, HTTPStatus.NOT_FOUND
             return product
-        except Exception:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -54,5 +54,5 @@ class ProductService():
             product = Product(**kwargs, seller_id=payload.user_id)
             product.save()
             return product, HTTPStatus.CREATED
-        except Exception as e:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR

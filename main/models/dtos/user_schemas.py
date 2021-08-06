@@ -1,5 +1,5 @@
 from main.models.dtos.product_schemas import ProductSchema
-from main.models.User import UserRolesEnum
+from main.models.user import UserRolesEnum
 from marshmallow import Schema, fields, validate
 
 

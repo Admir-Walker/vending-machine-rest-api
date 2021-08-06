@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from flask import request
-from main.models.User import User
+from main.models.user import User
 from .user_service import UserService
 
 
@@ -16,5 +16,5 @@ class AuthService():
                 return {"message": "Wrong username or password, try again."}, HTTPStatus.FORBIDDEN
 
             return user.encode_token(), HTTPStatus.OK
-        except Exception as e:
+        except:
             return {"message": "Something went wrong, try again."}, HTTPStatus.INTERNAL_SERVER_ERROR

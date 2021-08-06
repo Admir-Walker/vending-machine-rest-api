@@ -1,5 +1,5 @@
-from main.models.User import User
-from main.models.Product import Product
+from main.models.user import User
+from main.models.product import Product
 
 
 def add_users():
@@ -11,6 +11,13 @@ def add_users():
 
     User(
         username='user2',
+        password='test',
+        role='buyer',
+        deposit=1500
+    ).save()
+
+    User(
+        username='delete_me',
         password='test',
         role='buyer'
     ).save()

@@ -4,7 +4,7 @@ from main import create_app, db
 from config import ConfigNames
 
 
-@pytest.fixture(autouse=True ,scope='session')
+@pytest.fixture(autouse=True, scope='session')
 def setup_db():
     app = create_app(ConfigNames.TESTING)
 
@@ -16,11 +16,12 @@ def setup_db():
             add_products()
         yield client
 
+
 @pytest.fixture
 def client():
     app = create_app(ConfigNames.TESTING)
 
     with app.test_client() as client:
-            with app.app_context():
-                pass
-            yield client
+        with app.app_context():
+            pass
+        yield client
