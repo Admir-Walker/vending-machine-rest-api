@@ -14,10 +14,11 @@ DB_TRACK_MODIFICATIONS = strtobool(
 DB_USER = os.environ.get('DB_USER', 'postgres')
 DB_PASSWORD = os.environ.get('DB_PASSWORD', 'root')
 DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_TEST_HOST = os.environ.get('DB_TEST_HOST', 'localhost')
 DB_PORT = int(os.environ.get('DB_PORT', 5432))
 DB_NAME = os.environ.get('DB_NAME', 'vending_machine')
-DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-DB_TEST_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}_test"
+DB_URL = os.environ.get('DB_URL', f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+DB_TEST_URL = os.environ.get('DB_TEST_URL', f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_TEST_HOST}:{DB_PORT}/{DB_NAME}_test")
 
 # app keys settings
 

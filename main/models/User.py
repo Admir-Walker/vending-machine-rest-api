@@ -14,6 +14,7 @@ class User(CrudMixin, db.Model):
     deposit = db.Column(db.Float, default=0.0)
     role = db.Column(
         db.Enum(*[role.value for role in UserRolesEnum], name='user_roles_enum'), default='buyer')
+    products = db.relationship('Product', backref='user', lazy=True)
 
     @property
     def password(self):

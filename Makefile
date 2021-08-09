@@ -1,7 +1,7 @@
 .ONESHELL:
 .PHONY: all
 
-create:
+install:
 	python3 -m venv venv; \
 	. venv/bin/activate; \
 	pip install -r requirements.txt
@@ -31,4 +31,4 @@ coverage:
 	coverage report; \
 	coverage html
 
-all: create db run
+all: install db run
