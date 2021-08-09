@@ -2,6 +2,8 @@
 
 Rest API for a vending machine that allows users with a 'seller' role to add, update or remove products, while users with a 'buyer role' can deposit coins into the machine and make purchases.
 
+`Important note`: .env file is published for demo purposes only to ease application setup.
+
 ## Tech
 Rest API use a number of open source projects to work properly:
 
