@@ -3,7 +3,7 @@ from main.models.user import UserRolesEnum
 from main.utils.decorators import has_valid_role
 from main.services.user_service import UserService
 from flask_apispec.views import MethodResource
-from main.models.dtos.user_schemas import RegistrationResponseSchema, UserBuyRequestSchema, UserBuyResponseSchema, UserDepositRequestSchema, UserGetResponseSchema, UserSchema, UserUpdateRequestSchema, UserUpdateResponseSchema
+from main.models.dtos.user_schemas import RegistrationRequestSchema, RegistrationResponseSchema, UserBuyRequestSchema, UserBuyResponseSchema, UserDepositRequestSchema, UserGetResponseSchema, UserSchema, UserUpdateRequestSchema, UserUpdateResponseSchema
 from main.models.dtos.helper_schemas import BaseResponseSchema
 from flask_apispec import use_kwargs, doc
 from flask_apispec.annotations import marshal_with
@@ -20,7 +20,7 @@ class UserListResource(MethodResource, Resource):
     def get(self):
         return UserService.all()
 
-    @use_kwargs(UserSchema, location=('json'))
+    @use_kwargs(RegistrationRequestSchema, location=('json'))
     @marshal_with(RegistrationResponseSchema, code=HTTPStatus.CREATED)
     @marshal_with(BaseResponseSchema, code=HTTPStatus.CONFLICT, description='Credentials Taken')
     @marshal_with(BaseResponseSchema, code=HTTPStatus.INTERNAL_SERVER_ERROR, description='Server Error')

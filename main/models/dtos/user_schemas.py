@@ -14,6 +14,15 @@ class UserSchema(Schema):
     deposit = fields.Int()
 
 
+class RegistrationRequestSchema(Schema):
+    username = fields.Str(
+        required=True, validate=validate.Length(min=1, max=50))
+    password = fields.Str(
+        required=True, validate=validate.Length(min=1, max=50))
+    role = fields.Str(validate=validate.OneOf(
+        [e.value for e in UserRolesEnum]))
+
+
 class RegistrationResponseSchema(Schema):
     auth_token = fields.Str()
     message = fields.Str()
