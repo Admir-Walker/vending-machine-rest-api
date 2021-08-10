@@ -31,6 +31,8 @@ services:
       POSTGRES_DB: vending_machine
     ports:
       - 8001:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
   test_db:
     image: postgres
     restart: always
@@ -40,3 +42,6 @@ services:
       POSTGRES_DB: vending_machine_test
     ports:
       - 8002:5432
+
+volumes:
+  db-data:
