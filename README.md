@@ -38,7 +38,7 @@ Vending Machine Rest API requires:
 
 When you meet specified requirements, it's necessary to manually create two postgres databases named `vending_machine` and `vending_machine_test`.
 
-After database creation, modify .env file to make sure your database credentials are
+After database creation, modify .env file to make sure your database credentials are correct.
 #### Installation on MacOS/Linux
 Navigate to the project root and type in your preferred terminal:
 ```sh
